@@ -1,0 +1,48 @@
+﻿@page
+@using Lionsoft.Helpers;
+@using Lionsoft.Models;
+@using System.Text.RegularExpressions;
+@using System.Xml.XPath;
+@model Lionsoft.Pages.SquashModel
+@{
+    ViewData["Title"] = "Squash";
+    var events = RezonSiteParserHelper.GetEvents("https://bo5.pl/rezon/calendar");
+    var url = "https://ranking.polskisquash.pl/info/org.gracz";
+    var playerList = new List<PlayerDataModel>();
+    playerList.Add(PlayerSiteParserHelper.GetPlayerData($"{url}/31483"));
+    playerList.Add(PlayerSiteParserHelper.GetPlayerData($"{url}/31492"));
+}
+
+<div class="text-center">
+    @foreach (var player in playerList)
+    {
+        <h1 class="display-4">@player.Name</h1>
+        <table class="table">
+            @foreach (var rank in player.Ranking)
+            {
+                <tr>
+                    <td>@rank.Name</td>
+                    <td><b>@rank.Position</b></td>
+                    <td>@rank.Points</td>
+                </tr>
+            }
+        </table>
+    }
+    <h1 class="display-4">Wydarzenia w Rezonie</h1>
+    <table class="table">
+        @foreach (var singleEvent in events)
+        {
+            <tr>
+                <td>@singleEvent.Name</td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach (var link in singleEvent.Links)
+                    {
+                        <a href="@link.Link" target="_blank" class="btn btn-info" style="margin-bottom:1px">@link.Name</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
