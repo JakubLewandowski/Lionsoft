@@ -25,7 +25,7 @@ namespace Lionsoft.Helpers
                     var eventLink = new EventLinkModel()
                     {
                         Name = link.InnerText,
-                        Link = $"https://bo5.pl/{link.Attributes.FirstOrDefault().Value}"
+                        Link = $"https://bo5.pl{link.Attributes.FirstOrDefault().Value}"
                     };
 
                     singleEvent.Links.Add(eventLink);
