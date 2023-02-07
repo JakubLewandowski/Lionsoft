@@ -5,8 +5,9 @@ namespace Lionsoft.Helpers
 {
     public static class RezonSiteParserHelper
     {
-        public static List<EventModel> GetEvents(string url)
+        public static List<EventModel> GetEvents()
         {
+            var url = "https://bo5.pl/rezon/calendar";
             var list = new List<EventModel>();
             var http = new HttpClient();
             var webData = http.GetAsync(url).Result.Content.ReadAsStringAsync().Result;
@@ -33,7 +34,6 @@ namespace Lionsoft.Helpers
 
                 list.Add(singleEvent);
             }
-
 
             return list;
         }

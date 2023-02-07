@@ -6,17 +6,20 @@
 @model Lionsoft.Pages.SquashModel
 @{
     ViewData["Title"] = "Squash";
-    var events = RezonSiteParserHelper.GetEvents("https://bo5.pl/rezon/calendar");
-    var url = "https://ranking.polskisquash.pl/info/org.gracz";
+    var events = RezonSiteParserHelper.GetEvents();
     var playerList = new List<PlayerDataModel>();
-    playerList.Add(PlayerSiteParserHelper.GetPlayerData($"{url}/31483"));
-    playerList.Add(PlayerSiteParserHelper.GetPlayerData($"{url}/31492"));
+    playerList.Add(PlayerSiteParserHelper.GetPlayerData(31483, 38681));
+    playerList.Add(PlayerSiteParserHelper.GetPlayerData(31492, 38542));
+    var i = 0;
+    string Concat(string text, int i) => $"{text}{i}";
 }
 
 <div class="text-center">
     @foreach (var player in playerList)
     {
         <h1 class="display-4">@player.Name</h1>
+        <a href="@player.Bo5Link" class="btn btn-info btn-sm" target="_blank">Bo5</a>
+        <a href="@player.PsLink" class="btn btn-info btn-sm" target="_blank">Polski Squash</a>
         <table class="table">
             @foreach (var rank in player.Ranking)
             {
@@ -29,20 +32,25 @@
         </table>
     }
     <h1 class="display-4">Wydarzenia w Rezonie</h1>
-    <table class="table">
-        @foreach (var singleEvent in events)
-        {
-            <tr>
-                <td>@singleEvent.Name</td>
-            </tr>
-            <tr>
-                <td>
-                    @foreach (var link in singleEvent.Links)
-                    {
-                        <a href="@link.Link" target="_blank" class="btn btn-info" style="margin-bottom:1px">@link.Name</a>
-                    }
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="accordion" id="accordionExample">
+    @foreach (var singleEvent in events)
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="@Concat("headingOne", i)">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@Concat("#collapseOne", i)" aria-expanded="true" aria-controls="@Concat("collapseOne", i)">
+                    @singleEvent.Name
+                </button>
+            </h2>
+            <div id="@Concat("collapseOne", i)" class="accordion-collapse collapse" aria-labelledby="@Concat("headingOne", i)" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                @foreach (var link in singleEvent.Links)
+                {
+                    <a href="@link.Link" target="_blank" class="btn btn-info" style="margin-bottom:1px">@link.Name</a>
+                }
+                </div>
+            </div>
+        </div>
+    i++;
+    }
+    </div>
 </div>
