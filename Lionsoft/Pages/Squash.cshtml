@@ -7,7 +7,7 @@
 @{
     ViewData["Title"] = "Squash";
     var rezonSiteParserHelper = new RezonSiteParserHelper();
-    var events = await rezonSiteParserHelper.GetEvents();
+    var events = rezonSiteParserHelper.GetEvents();
     var playerSiteParserHelper = new PlayerSiteParserHelper();
     var playerList = playerSiteParserHelper.GetPlayersData();
     var i = 0;
@@ -33,7 +33,7 @@
     }
     <h1 class="display-4">Wydarzenia w Rezonie</h1>
     <div class="accordion" id="accordionEvents">
-    @foreach (var singleEvent in events)
+    @await foreach (var singleEvent in events)
     {
         <div class="accordion-item">
             <h2 class="accordion-header" id="@Concat("heading", i)">
