@@ -6,14 +6,16 @@
 @model Lionsoft.Pages.SquashModel
 @{
     ViewData["Title"] = "Squash";
-    var events = RezonSiteParserHelper.GetEvents();
-    var playerList = PlayerSiteParserHelper.GetPlayersData();
+    var rezonSiteParserHelper = new RezonSiteParserHelper();
+    var events = await rezonSiteParserHelper.GetEvents();
+    var playerSiteParserHelper = new PlayerSiteParserHelper();
+    var playerList = playerSiteParserHelper.GetPlayersData();
     var i = 0;
     string Concat(string text, int i) => $"{text}{i}";
 }
 
 <div class="text-center">
-    @foreach (var player in playerList)
+    @await foreach (var player in playerList)
     {
         <h1 class="display-4">@player.Name</h1>
         <a href="@player.Bo5Link" class="btn btn-info btn-sm" target="_blank">Bo5</a>

@@ -3,15 +3,15 @@ using Lionsoft.Models;
 
 namespace Lionsoft.Helpers
 {
-    public static class PlayerSiteParserHelper
+    public class PlayerSiteParserHelper
     {
-        public static IEnumerable<PlayerDataModel> GetPlayersData()
+        public async IAsyncEnumerable<PlayerDataModel> GetPlayersData()
         {
-            yield return GetPlayerData(31483, 38681);
-            yield return GetPlayerData(31492, 38542);
+            yield return await GetPlayerData(31483, 38681);
+            yield return await GetPlayerData(31492, 38542);
         }
 
-        public static PlayerDataModel GetPlayerData(int psid, int bo5id)
+        public async Task<PlayerDataModel> GetPlayerData(int psid, int bo5id)
         {
             var url = $"https://ranking.polskisquash.pl/info/org.gracz/{psid}";
             var playerDataModel = new PlayerDataModel()
@@ -19,7 +19,7 @@ namespace Lionsoft.Helpers
                  PsLink = url
             };
             var http = new HttpClient();
-            var webData = http.GetAsync(url).Result.Content.ReadAsStringAsync().Result;
+            var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(webData);
             playerDataModel.Name = htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"ranking2\"]/div/div[1]/div/h2/span[2]").InnerText;
@@ -27,9 +27,9 @@ namespace Lionsoft.Helpers
             int i = 0;
             var rankingModel = new RankingModel();
 
-            foreach (HtmlNode col in htmlDocument.DocumentNode.SelectNodes("//table[@class='ranking']//tr//td"))
+            foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//table[@class='ranking']//tr//td"))
             {
-                var data = col.InnerText.Trim();
+                var data = row.InnerText.Trim();
                 if (!string.IsNullOrEmpty(data))
                 {
                     switch (i)
@@ -46,7 +46,6 @@ namespace Lionsoft.Helpers
                         default:
                             break;
                     }
-
                     i++;
                 }
                 else
@@ -55,7 +54,6 @@ namespace Lionsoft.Helpers
                     rankingModel = new RankingModel();
                     i = 0;
                 }
-
             }
 
             return playerDataModel;
