@@ -7,9 +7,7 @@
 @{
     ViewData["Title"] = "Squash";
     var events = RezonSiteParserHelper.GetEvents();
-    var playerList = new List<PlayerDataModel>();
-    playerList.Add(PlayerSiteParserHelper.GetPlayerData(31483, 38681));
-    playerList.Add(PlayerSiteParserHelper.GetPlayerData(31492, 38542));
+    var playerList = PlayerSiteParserHelper.GetPlayersData();
     var i = 0;
     string Concat(string text, int i) => $"{text}{i}";
 }
