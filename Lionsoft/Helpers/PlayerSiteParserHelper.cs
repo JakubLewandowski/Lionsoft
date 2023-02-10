@@ -22,7 +22,7 @@ namespace Lionsoft.Helpers
             var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(webData);
-            playerDataModel.Name = htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"ranking2\"]/div/div[1]/div/h2/span[2]").InnerText;
+            playerDataModel.Name = htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"ranking2\"]/div/div[1]/div/h2/span[2]").InnerText.Trim();
             playerDataModel.Bo5Link = $"https://gracz.squasha.pl/{bo5id}/{playerDataModel.Name.Replace(" ", "+")}";
             int i = 0;
             var rankingModel = new RankingModel();
