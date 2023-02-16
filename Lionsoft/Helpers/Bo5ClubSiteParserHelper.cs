@@ -3,11 +3,11 @@ using Lionsoft.Models;
 
 namespace Lionsoft.Helpers
 {
-    public class RezonSiteParserHelper
+    public class Bo5ClubSiteParserHelper
     {
-        public async IAsyncEnumerable<EventModel> GetEvents()
+        public async IAsyncEnumerable<EventModel> GetEvents(string clubName)
         {
-            var url = "https://bo5.pl/rezon/calendar";
+            var url = $"https://bo5.pl/{clubName}/calendar";
             var http = new HttpClient();
             var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
             var htmlDocument = new HtmlDocument();
