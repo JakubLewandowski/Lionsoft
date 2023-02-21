@@ -29,7 +29,7 @@ namespace Lionsoft.Helpers
             htmlDocument.Load(webData);
             playerDataModel.Name = htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"ranking2\"]/div/div[1]/div/h2/span[2]").InnerText.Trim();
             playerDataModel.Bo5Link = $"https://gracz.squasha.pl/{bo5id}/{playerDataModel.Name.Replace(" ", "+")}";
-            playerDataModel.Events = GetTournaments(playerDataModel.Bo5Link);
+            playerDataModel.Events = await GetTournaments(playerDataModel.Bo5Link);
 
             int i = 0;
             var rankingModel = new RankingModel();
@@ -63,8 +63,9 @@ namespace Lionsoft.Helpers
             return playerDataModel;
         }
 
-        private async IAsyncEnumerable<TournamentModel> GetTournaments(string url)
+        private async Task<List<TournamentModel>> GetTournaments(string url)
         {
+            var list = new List<TournamentModel>();
             var tournamentModel = new TournamentModel();
             var http = new HttpClient();
             var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
@@ -73,15 +74,19 @@ namespace Lionsoft.Helpers
 
             foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tr/td/div/a"))
             {
-                tournamentModel = new TournamentModel();
-                tournamentModel.Name = row.InnerText.Trim();
+                tournamentModel = new TournamentModel
+                {
+                    Name = row.InnerText.Trim()
+                };
                 string pattern = @"<a\s+(?:[^>]*?\s+)?href=([""'])(.*?)\1";
-                Regex rg = new Regex(pattern);
+                var rg = new Regex(pattern);
                 MatchCollection matchedAuthors = rg.Matches(row.OuterHtml);
                 tournamentModel.Url = matchedAuthors[0].Groups[2].Value;
 
-                yield return tournamentModel;
+                list.Add(tournamentModel);
             }
+
+            return list;
         }
     }
 }
