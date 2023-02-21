@@ -1,5 +1,9 @@
 ﻿using HtmlAgilityPack;
 using Lionsoft.Models;
+using Microsoft.Extensions.FileSystemGlobbing;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using static System.Net.WebRequestMethods;
 
 namespace Lionsoft.Helpers
 {
@@ -20,16 +24,12 @@ namespace Lionsoft.Helpers
             };
             
             var http = new HttpClient();
-            var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
+            var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
             var htmlDocument = new HtmlDocument();
-            htmlDocument.Load(webData);
+            htmlDocument.LoadHtml(webData);
             playerDataModel.Name = htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"ranking2\"]/div/div[1]/div/h2/span[2]").InnerText.Trim();
             playerDataModel.Bo5Link = $"https://gracz.squasha.pl/{bo5id}/{playerDataModel.Name.Replace(" ", "+")}";
-
-            var webData2 = await http.GetAsync(playerDataModel.Bo5Link).Result.Content.ReadAsStringAsync();
-            var htmlDocument2 = new HtmlDocument();
-            htmlDocument2.LoadHtml(webData2);
-            var test = htmlDocument2.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tbody/tr/td");
+            playerDataModel.Events = GetTournaments(playerDataModel.Bo5Link);
 
             int i = 0;
             var rankingModel = new RankingModel();
@@ -61,6 +61,27 @@ namespace Lionsoft.Helpers
             }
 
             return playerDataModel;
+        }
+
+        private async IAsyncEnumerable<TournamentModel> GetTournaments(string url)
+        {
+            var tournamentModel = new TournamentModel();
+            var http = new HttpClient();
+            var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(webData);
+
+            foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tr/td/div/a"))
+            {
+                tournamentModel = new TournamentModel();
+                tournamentModel.Name = row.InnerText.Trim();
+                string pattern = @"<a\s+(?:[^>]*?\s+)?href=([""'])(.*?)\1";
+                Regex rg = new Regex(pattern);
+                MatchCollection matchedAuthors = rg.Matches(row.OuterHtml);
+                tournamentModel.Url = matchedAuthors[0].Groups[2].Value;
+
+                yield return tournamentModel;
+            }
         }
     }
 }
