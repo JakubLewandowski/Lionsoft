@@ -29,7 +29,7 @@ namespace Lionsoft.Helpers
             var webData2 = await http.GetAsync(playerDataModel.Bo5Link).Result.Content.ReadAsStringAsync();
             var htmlDocument2 = new HtmlDocument();
             htmlDocument2.LoadHtml(webData2);
-            var test = htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tbody/tr/td");
+            var test = htmlDocument2.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tbody/tr/td");
 
             int i = 0;
             var rankingModel = new RankingModel();
@@ -37,36 +37,27 @@ namespace Lionsoft.Helpers
             foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//table[@class='ranking']//tr//td"))
             {
                 var data = row.InnerText.Trim();
-                if (!string.IsNullOrEmpty(data))
+                switch (i)
                 {
-                    switch (i)
-                    {
-                        case 0:
-                            rankingModel.Name = data;
-                            break;
-                        case 1:
-                            rankingModel.Position = data;
-                            break;
-                        case 2:
-                            rankingModel.Points = data;
-                            break;
-                        case 3:
-                            rankingModel.BestPosition = data.Replace("&nbsp;", " ");
-                            playerDataModel.Ranking.Add(rankingModel);
-                            rankingModel = new RankingModel();
-                            i = -1;
-                            break;
-                        default:
-                            break;
-                    }
-                    i++;
+                    case 0:
+                        rankingModel.Name = data;
+                        break;
+                    case 1:
+                        rankingModel.Position = data;
+                        break;
+                    case 2:
+                        rankingModel.Points = data;
+                        break;
+                    case 3:
+                        rankingModel.BestPosition = data.Replace("&nbsp;", " ");
+                        playerDataModel.Ranking.Add(rankingModel);
+                        rankingModel = new RankingModel();
+                        i = -1;
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    playerDataModel.Ranking.Add(rankingModel);
-                    rankingModel = new RankingModel();
-                    i = 0;
-                }
+                i++;
             }
 
             return playerDataModel;
