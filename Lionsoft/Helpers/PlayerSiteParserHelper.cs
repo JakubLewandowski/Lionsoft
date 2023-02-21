@@ -24,9 +24,9 @@ namespace Lionsoft.Helpers
             };
             
             var http = new HttpClient();
-            var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
+            var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
             var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(webData);
+            htmlDocument.Load(webData);
             playerDataModel.Name = htmlDocument.DocumentNode.SelectSingleNode("//*[@id=\"ranking2\"]/div/div[1]/div/h2/span[2]").InnerText.Trim();
             playerDataModel.Bo5Link = $"https://gracz.squasha.pl/{bo5id}/{playerDataModel.Name.Replace(" ", "+")}";
             playerDataModel.Events = GetTournaments(playerDataModel.Bo5Link);
@@ -67,9 +67,9 @@ namespace Lionsoft.Helpers
         {
             var tournamentModel = new TournamentModel();
             var http = new HttpClient();
-            var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
+            var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
             var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(webData);
+            htmlDocument.Load(webData);
 
             foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tr/td/div/a"))
             {
