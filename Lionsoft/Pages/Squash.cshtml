@@ -22,8 +22,8 @@
         <div class="d-flex align-items-start">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <button class="nav-link active" id="@Concat("nav-ranking-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-ranking", i)" type="button" role="tab" aria-controls="@Concat("nav-ranking", i)" aria-selected="true">Ranking</button>
-                <button class="nav-link" id="@Concat("nav-links-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-links", i)" type="button" role="tab" aria-controls="@Concat("nav-links", i)" aria-selected="false">Linki</button>
                 <button class="nav-link" id="@Concat("nav-playin-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-playin", i)" type="button" role="tab" aria-controls="@Concat("nav-playin", i)" aria-selected="false">Zagra w</button>
+                <button class="nav-link" id="@Concat("nav-links-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-links", i)" type="button" role="tab" aria-controls="@Concat("nav-links", i)" aria-selected="false">Linki</button>
             </div>
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="@Concat("nav-ranking", i)" role="tabpanel" aria-labelledby="@Concat("nav-ranking-tab", i)" tabindex="0">
@@ -34,19 +34,20 @@
                             <td>@rank.Name</td>
                             <td><b>@rank.Position</b></td>
                             <td>@rank.Points</td>
+                            <td>@rank.BestPosition</td>
                         </tr>
                     }
                     </table>
+                </div>
+                <div class="tab-pane fade" id="@Concat("nav-playin", i)" role="tabpanel" aria-labelledby="@Concat("nav-playin-tab", i)" tabindex="0">
+                    <div style="padding:10px">
+                        W budowie
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="@Concat("nav-links", i)" role="tabpanel" aria-labelledby="@Concat("nav-links-tab", i)" tabindex="0">
                     <div style="padding:10px">
                         <a href="@player.Bo5Link" class="btn btn-info btn-sm" target="_blank">Bo5</a>
                         <a href="@player.PsLink" class="btn btn-info btn-sm" target="_blank">Polski Squash</a>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="@Concat("nav-playin", i)" role="tabpanel" aria-labelledby="@Concat("nav-playin-tab", i)" tabindex="0">
-                    <div style="padding:10px">
-                        W budowie
                     </div>
                 </div>
             </div>

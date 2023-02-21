@@ -9,9 +9,9 @@ namespace Lionsoft.Helpers
         {
             var url = $"https://bo5.pl/{clubName}/calendar";
             var http = new HttpClient();
-            var webData = await http.GetAsync(url).Result.Content.ReadAsStringAsync();
+            var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
             var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(webData);
+            htmlDocument.Load(webData);
             foreach (var node in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mlevel0\"]/div/div/h4/a"))
             {
                 var singleEvent = new EventModel()
