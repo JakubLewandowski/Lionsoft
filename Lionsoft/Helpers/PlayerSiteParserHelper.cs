@@ -1,9 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Lionsoft.Models;
-using Microsoft.Extensions.FileSystemGlobbing;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using static System.Net.WebRequestMethods;
 
 namespace Lionsoft.Helpers
 {
@@ -66,23 +63,21 @@ namespace Lionsoft.Helpers
         private async Task<List<TournamentModel>> GetTournaments(string url)
         {
             var list = new List<TournamentModel>();
-            var tournamentModel = new TournamentModel();
             var http = new HttpClient();
             var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
             var htmlDocument = new HtmlDocument();
             htmlDocument.Load(webData);
 
-            foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mainContainer\"]/div/div/div[4]/div/div[2]/table/tr/td/div/a"))
+            foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//table[contains(@class,'incoming')]/tr/td[2]"))
             {
-                tournamentModel = new TournamentModel
+                var tournamentModel = new TournamentModel
                 {
-                    Name = row.InnerText.Trim()
+                    Name = row.InnerHtml.RemoveHtmlTags()
                 };
                 string pattern = @"<a\s+(?:[^>]*?\s+)?href=([""'])(.*?)\1";
-                var rg = new Regex(pattern);
-                MatchCollection matchedAuthors = rg.Matches(row.OuterHtml);
-                tournamentModel.Url = matchedAuthors[0].Groups[2].Value;
-
+                var regex = new Regex(pattern);
+                MatchCollection matchedUrls = regex.Matches(row.OuterHtml);
+                tournamentModel.Url = matchedUrls[0].Groups[2].Value;
                 list.Add(tournamentModel);
             }
 

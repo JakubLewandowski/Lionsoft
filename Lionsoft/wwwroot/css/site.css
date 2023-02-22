@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+a.btn {
+    margin-bottom: 2px;
+}
+
+h1 {
+    margin: 10px 0 10px 0;
+}

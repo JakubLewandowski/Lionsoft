@@ -16,7 +16,7 @@ namespace Lionsoft.Helpers
             {
                 var singleEvent = new EventModel()
                 {
-                    Name = node.InnerText
+                    Name = node.InnerHtml.RemoveHtmlTags()
                 };
 
                 var id = node.Attributes.LastOrDefault()?.Value.Replace("#", string.Empty);
@@ -24,7 +24,7 @@ namespace Lionsoft.Helpers
                 {
                     var eventLink = new EventLinkModel()
                     {
-                        Name = link.InnerText,
+                        Name = link.InnerHtml.RemoveHtmlTags(),
                         Link = $"https://bo5.pl{link.Attributes.FirstOrDefault()?.Value}"
                     };
 
