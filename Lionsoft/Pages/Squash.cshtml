@@ -20,12 +20,12 @@
     {
         <h1 class="display-4">@player.Name</h1>
         <div class="d-flex align-items-start">
-            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" >
                 <button class="nav-link active" id="@Concat("nav-ranking-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-ranking", i)" type="button" role="tab" aria-controls="@Concat("nav-ranking", i)" aria-selected="true">Ranking</button>
                 <button class="nav-link" id="@Concat("nav-playin-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-playin", i)" type="button" role="tab" aria-controls="@Concat("nav-playin", i)" aria-selected="false">Zagra w (@player.Events.Count())</button>
                 <button class="nav-link" id="@Concat("nav-links-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-links", i)" type="button" role="tab" aria-controls="@Concat("nav-links", i)" aria-selected="false">Linki</button>
             </div>
-            <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-content" id="v-pills-tabContent" style="width:100%">
                 <div class="tab-pane fade show active" id="@Concat("nav-ranking", i)" role="tabpanel" aria-labelledby="@Concat("nav-ranking-tab", i)" tabindex="0">
                     <table class="table">
                     @foreach (var rank in player.Ranking)
