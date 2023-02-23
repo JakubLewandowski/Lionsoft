@@ -1,4 +1,4 @@
-﻿using HtmlAgilityPack;
+﻿    using HtmlAgilityPack;
 using Lionsoft.Models;
 
 namespace Lionsoft.Helpers
@@ -25,7 +25,8 @@ namespace Lionsoft.Helpers
                     var eventLink = new EventLinkModel()
                     {
                         Name = link.InnerHtml.RemoveHtmlTags(),
-                        Link = $"https://bo5.pl{link.Attributes.FirstOrDefault()?.Value}"
+                        Link = $"https://bo5.pl{link.Attributes.FirstOrDefault()?.Value}",
+                        IsUpToDate = !link.OuterHtml.Contains("silver")
                     };
 
                     singleEvent.Links.Add(eventLink);

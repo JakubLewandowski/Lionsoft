@@ -13,6 +13,8 @@
     var playerList = playerSiteParserHelper.GetPlayersData();
     var i = 0;
     string Concat(string text, int i) => $"{text}{i}";
+    string HideRow(string text) => string.IsNullOrEmpty(text) ? "visibility:collapse;" : string.Empty;
+    string SelectButtonColor(bool status) => status ? "btn btn-info" : "btn btn-secondary";
 }
 
 <div class="text-center">
@@ -34,7 +36,9 @@
                             <td>@rank.Name</td>
                             <td><strong>@rank.Position</strong></td>
                             <td>@rank.Points</td>
-                            <td><strong>@rank.BestPosition</strong></td>
+                        </tr>
+                        <tr style="@HideRow(rank.BestPosition)">
+                            <td colspan="3"><strong>@rank.BestPosition</strong></td>
                         </tr>
                     }
                     </table>
@@ -71,7 +75,7 @@
                     <div class="accordion-body">
                         @foreach (var link in singleEvent.Links)
                         {
-                            <a href="@link.Link" target="_blank" class="btn btn-info">@link.Name</a>
+                            <a href="@link.Link" target="_blank" class="@SelectButtonColor(link.IsUpToDate)">@link.Name</a>
                         }
                     </div>
                 </div>
