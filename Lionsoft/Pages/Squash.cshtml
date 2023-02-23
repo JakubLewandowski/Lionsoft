@@ -84,7 +84,7 @@
         }
     </div>
     <h1 class="display-4">Wydarzenia w 11 punkcie</h1>
-    <div class="accordion" id="accordionEvents">
+    <div class="accordion" id="accordionEvents2">
         @await foreach (var singleEvent in elevenPointEvents)
         {
             <div class="accordion-item">
@@ -93,7 +93,7 @@
                         @singleEvent.Name
                     </button>
                 </h2>
-                    <div id="@Concat("collapse", i)" class="accordion-collapse collapse" aria-labelledby="@Concat("heading", i)" data-bs-parent="#accordionEvents">
+                    <div id="@Concat("collapse", i)" class="accordion-collapse collapse" aria-labelledby="@Concat("heading", i)" data-bs-parent="#accordionEvents2">
                     <div class="accordion-body">
                         @foreach (var link in singleEvent.Links)
                         {
