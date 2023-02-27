@@ -31,9 +31,9 @@ namespace Lionsoft.Helpers
             int i = 0;
             var rankingModel = new RankingModel();
 
-            foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//table[@class='ranking']//tr//td"))
+            foreach (HtmlNode rank in htmlDocument.DocumentNode.SelectNodes("//table[@class='ranking']//tr//td"))
             {
-                var data = row.InnerText.Trim();
+                var data = rank.InnerText.Trim();
                 switch (i)
                 {
                     case 0:
@@ -57,6 +57,38 @@ namespace Lionsoft.Helpers
                 i++;
             }
 
+            var resultModel = new ResultModel();
+            foreach (HtmlNode result in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"ranking2\"]/div/div[6]/table/tr/td"))
+            {
+                var data = result.InnerText.Trim();
+
+                if (result.OuterHtml.Contains("date"))
+                {
+                    resultModel.Date = data;
+                }
+                else if (result.OuterHtml.Contains("name"))
+                {
+                    resultModel.Name = data;
+                }
+                else if (result.OuterHtml.Contains("category"))
+                {
+                    resultModel.Category = data;
+                }
+                else if (result.OuterHtml.Contains("rank"))
+                {
+                    resultModel.Rank = data;
+                }
+                else if (result.OuterHtml.Contains("result"))
+                {
+                    resultModel.Result = data;
+                }
+                else if (result.OuterHtml.Contains("options"))
+                {
+                    playerDataModel.Results.Add(resultModel);
+                    resultModel = new ResultModel();
+                }
+            }
+            
             return playerDataModel;
         }
 

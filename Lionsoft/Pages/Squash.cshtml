@@ -25,22 +25,25 @@
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" >
                 <button class="nav-link active" id="@Concat("nav-ranking-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-ranking", i)" type="button" role="tab" aria-controls="@Concat("nav-ranking", i)" aria-selected="true">Ranking</button>
                 <button class="nav-link" id="@Concat("nav-playin-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-playin", i)" type="button" role="tab" aria-controls="@Concat("nav-playin", i)" aria-selected="false">Zagra w (@player.Events.Count())</button>
+                <button class="nav-link" id="@Concat("nav-results-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-results", i)" type="button" role="tab" aria-controls="@Concat("nav-results", i)" aria-selected="false">Wyniki</button>
                 <button class="nav-link" id="@Concat("nav-links-tab", i)" data-bs-toggle="pill" data-bs-target="@Concat("#nav-links", i)" type="button" role="tab" aria-controls="@Concat("nav-links", i)" aria-selected="false">Linki</button>
             </div>
             <div class="tab-content" id="v-pills-tabContent" style="width:100%">
                 <div class="tab-pane fade show active" id="@Concat("nav-ranking", i)" role="tabpanel" aria-labelledby="@Concat("nav-ranking-tab", i)" tabindex="0">
                     <table class="table">
-                    @foreach (var rank in player.Ranking)
-                    {
-                        <tr>
-                            <td>@rank.Name</td>
-                            <td><strong>@rank.Position</strong></td>
-                            <td>@rank.Points</td>
-                        </tr>
-                        <tr style="@HideRow(rank.BestPosition)">
-                            <td colspan="3"><strong>@rank.BestPosition</strong></td>
-                        </tr>
-                    }
+                        <tbody>
+                        @foreach (var rank in player.Ranking)
+                        {
+                            <tr>
+                                <td>@rank.Name</td>
+                                <td><strong>@rank.Position</strong></td>
+                                <td>@rank.Points</td>
+                            </tr>
+                            <tr style="@HideRow(rank.BestPosition)">
+                                <td colspan="3"><strong>@rank.BestPosition</strong></td>
+                            </tr>
+                        }
+                        </tbody>
                     </table>
                 </div>
                 <div class="tab-pane fade" id="@Concat("nav-playin", i)" role="tabpanel" aria-labelledby="@Concat("nav-playin-tab", i)" tabindex="0">
@@ -50,6 +53,31 @@
                         <a href="@eventData.Url" class="btn btn-info btn-sm" target="_blank">@eventData.Name</a>
                     }
                     </div>
+                </div>
+                <div class="tab-pane fade" id="@Concat("nav-results", i)" role="tabpanel" aria-labelledby="@Concat("nav-results-tab", i)" tabindex="0">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Data</th>
+                                <th scope="col">Kategoria</th>
+                                <th scope="col">Nazwa wydarzenia</th>
+                                <th scope="col">Wynik</th>
+                                <th scope="col">Punkty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var result in player.Results)
+                        {
+                            <tr>
+                                <td>@result.Date</td>
+                                <td>@result.Category</td>
+                                <td>@result.Name</td>
+                                <td>@result.Rank</td>
+                                <td>@result.Result</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
                 </div>
                 <div class="tab-pane fade" id="@Concat("nav-links", i)" role="tabpanel" aria-labelledby="@Concat("nav-links-tab", i)" tabindex="0">
                     <div style="padding:10px">
