@@ -10,6 +10,7 @@ namespace Lionsoft.Helpers
         {
             yield return await GetPlayerData(31483, 38681);
             yield return await GetPlayerData(31492, 38542);
+            yield return await GetPlayerData(25062, 15597);
         }
 
         public async Task<PlayerDataModel> GetPlayerData(int psid, int bo5id)
@@ -57,13 +58,21 @@ namespace Lionsoft.Helpers
                 i++;
             }
 
+            var yearAgo = DateTime.Now.AddMonths(-12);
             var resultModel = new ResultModel();
-            foreach (HtmlNode result in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"ranking2\"]/div/div[6]/table/tr/td"))
+            foreach (HtmlNode result in htmlDocument.DocumentNode.SelectNodes("//table[contains(@class,'results')]/tr/td"))
             {
                 var data = result.InnerText.Trim();
 
                 if (result.OuterHtml.Contains("date"))
                 {
+                    var date = Convert.ToDateTime(data);
+
+                    if (date < yearAgo)
+                    {
+                        break;
+                    }
+
                     resultModel.Date = data;
                 }
                 else if (result.OuterHtml.Contains("name"))
