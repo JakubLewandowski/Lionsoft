@@ -12,7 +12,7 @@ namespace Lionsoft.Helpers
             var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
             var htmlDocument = new HtmlDocument();
             htmlDocument.Load(webData);
-            foreach (var node in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mlevel0\"]/div/div/h4/a"))
+            foreach (var node in htmlDocument.DocumentNode.SelectNodes("//*[@id=\"mlevel0\"]/div/div/h4/a") ?? Enumerable.Empty<HtmlNode>())
             {
                 var singleEvent = new EventModel()
                 {
@@ -20,7 +20,7 @@ namespace Lionsoft.Helpers
                 };
 
                 var id = node.Attributes.LastOrDefault()?.Value.Replace("#", string.Empty);
-                foreach (var link in htmlDocument.DocumentNode.SelectNodes($"//*[@id=\"{id}\"]/div[1]/a"))
+                foreach (var link in htmlDocument.DocumentNode.SelectNodes($"//*[@id=\"{id}\"]/div[1]/a") ?? Enumerable.Empty<HtmlNode>())
                 {
                     var eventLink = new EventLinkModel()
                     {
