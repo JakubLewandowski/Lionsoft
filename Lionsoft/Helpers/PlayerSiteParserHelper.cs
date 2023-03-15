@@ -10,7 +10,6 @@ namespace Lionsoft.Helpers
         {
             yield return await GetPlayerData(31483, 38681);
             yield return await GetPlayerData(31492, 38542);
-            yield return await GetPlayerData(25062, 15597);
         }
 
         public async Task<PlayerDataModel> GetPlayerData(int psid, int bo5id)
@@ -20,17 +19,18 @@ namespace Lionsoft.Helpers
             {
                  PsLink = url
             };
-            
-            var http = new HttpClient();
-            var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.Load(webData);
-            playerDataModel.Name = GetPlayerName(htmlDocument);
-            playerDataModel.Bo5Link = $"https://gracz.squasha.pl/{bo5id}/{playerDataModel.Name.Replace(" ", "+")}";
+            var httpClientHelper = new HttpClientHelper();
+            var htmlDocument = await httpClientHelper.Get(url);
+
+            if (htmlDocument != null)
+            {
+                playerDataModel.Name = GetPlayerName(htmlDocument);
+                playerDataModel.Ranking = await GetRanking(htmlDocument);
+                playerDataModel.Results = GetResults(htmlDocument);
+            }
+            playerDataModel.Bo5Link = $"https://gracz.squasha.pl/{bo5id}/{playerDataModel.Name?.Replace(" ", "+")}";
             playerDataModel.Events = await GetTournaments(playerDataModel.Bo5Link);
-            playerDataModel.Ranking = await GetRanking(htmlDocument);
-            playerDataModel.Results = await GetResults(htmlDocument);
-            
+
             return playerDataModel;
         }
 
@@ -42,7 +42,6 @@ namespace Lionsoft.Helpers
         private async Task<List<RankingModel>> GetRanking(HtmlDocument htmlDocument)
         {
             var list = new List<RankingModel>();
-
             int i = 0;
             var rankingModel = new RankingModel();
 
@@ -75,7 +74,7 @@ namespace Lionsoft.Helpers
             return list;
         }
 
-        private async Task<List<ResultModel>> GetResults(HtmlDocument htmlDocument)
+        private List<ResultModel> GetResults(HtmlDocument htmlDocument)
         {
             var yearAgo = DateTime.Now.AddMonths(-12);
             var list = new List<ResultModel>();
@@ -117,29 +116,30 @@ namespace Lionsoft.Helpers
                     resultModel = new ResultModel();
                 }
             }
-
+            
             return list;
         }
 
         private async Task<List<TournamentModel>> GetTournaments(string url)
         {
             var list = new List<TournamentModel>();
-            var http = new HttpClient();
-            var webData = await http.GetAsync(url).Result.Content.ReadAsStreamAsync();
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.Load(webData);
+            var httpClientHelper = new HttpClientHelper();
+            var htmlDocument = await httpClientHelper.Get(url);
 
-            foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//table[contains(@class,'incoming')]/tr/td[2]") ?? Enumerable.Empty<HtmlNode>())
+            if (htmlDocument != null)
             {
-                var tournamentModel = new TournamentModel
+                foreach (HtmlNode row in htmlDocument.DocumentNode.SelectNodes("//table[contains(@class,'incoming')]/tr/td[2]") ?? Enumerable.Empty<HtmlNode>())
                 {
-                    Name = row.InnerHtml.RemoveHtmlTags()
-                };
-                string pattern = @"<a\s+(?:[^>]*?\s+)?href=([""'])(.*?)\1";
-                var regex = new Regex(pattern);
-                MatchCollection matchedUrls = regex.Matches(row.OuterHtml);
-                tournamentModel.Url = matchedUrls[0].Groups[2].Value;
-                list.Add(tournamentModel);
+                    var tournamentModel = new TournamentModel
+                    {
+                        Name = row.InnerHtml.RemoveHtmlTags()
+                    };
+                    string pattern = @"<a\s+(?:[^>]*?\s+)?href=([""'])(.*?)\1";
+                    var regex = new Regex(pattern);
+                    MatchCollection matchedUrls = regex.Matches(row.OuterHtml);
+                    tournamentModel.Url = matchedUrls[0].Groups[2].Value;
+                    list.Add(tournamentModel);
+                }
             }
 
             return list;
