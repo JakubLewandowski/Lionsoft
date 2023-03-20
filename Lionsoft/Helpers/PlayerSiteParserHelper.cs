@@ -14,7 +14,7 @@ namespace Lionsoft.Helpers
 
         public async Task<PlayerDataModel> GetPlayerData(int psid, int bo5id)
         {
-            var url = $"https://ranking.polskisquash.pl/info/org.gracz/{psid}";
+            var url = $"https://pzsq.tournament.tools/info/org.gracz/{psid}";
             var playerDataModel = new PlayerDataModel()
             {
                  PsLink = url
