@@ -58,7 +58,9 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th scope="col"></th>
                                 <th scope="col">Data</th>
+                                <th scope="col">Typ</th>
                                 <th scope="col">Kategoria</th>
                                 <th scope="col">Nazwa wydarzenia</th>
                                 <th scope="col">Wynik</th>
@@ -69,13 +71,15 @@
                         @foreach (var result in player.Results)
                         {
                             <tr>
+                                <td>@result.CardinalNumber</td>
                                 <td>@result.Date</td>
+                                <td>@result.Type</td>
                                 <td>@result.Category</td>
                                 <td>@result.Name</td>
                                 <td>@result.Rank</td>
                                 <td>@result.Result</td>
                             </tr>
-                        }
+                            }
                         </tbody>
                     </table>
                 </div>

@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Lionsoft.Models;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Lionsoft.Helpers
@@ -76,12 +77,14 @@ namespace Lionsoft.Helpers
 
         private List<ResultModel> GetResults(HtmlDocument htmlDocument)
         {
+            var i = 1;
             var yearAgo = DateTime.Now.AddMonths(-12);
             var list = new List<ResultModel>();
             var resultModel = new ResultModel();
             foreach (HtmlNode result in htmlDocument.DocumentNode.SelectNodes("//table[contains(@class,'results')]/tr/td") ?? Enumerable.Empty<HtmlNode>())
             {
                 var data = result.InnerText.Trim();
+                resultModel.CardinalNumber = i;
 
                 if (result.OuterHtml.Contains("date"))
                 {
@@ -96,11 +99,15 @@ namespace Lionsoft.Helpers
                 }
                 else if (result.OuterHtml.Contains("name"))
                 {
-                    resultModel.Name = data;
+                    string pattern = @"^([\w\-]+)";
+                    var regex = new Regex(pattern);
+                    Match matchedCategory = regex.Match(data);
+                    resultModel.Category = matchedCategory.Value;
+                    resultModel.Name = data.Remove(0, resultModel.Category.Count() + 1);
                 }
                 else if (result.OuterHtml.Contains("category"))
                 {
-                    resultModel.Category = data;
+                    resultModel.Type = data;
                 }
                 else if (result.OuterHtml.Contains("rank"))
                 {
@@ -108,14 +115,17 @@ namespace Lionsoft.Helpers
                 }
                 else if (result.OuterHtml.Contains("result"))
                 {
-                    resultModel.Result = data;
+                    resultModel.Result = Convert.ToDecimal(data, new CultureInfo("en-US"));
                 }
                 else if (result.OuterHtml.Contains("options"))
                 {
                     list.Add(resultModel);
                     resultModel = new ResultModel();
+                    i++;
                 }
             }
+
+            list.Add(new ResultModel() { Result = list.Select(x => x.Result).Sum() });
             
             return list;
         }
