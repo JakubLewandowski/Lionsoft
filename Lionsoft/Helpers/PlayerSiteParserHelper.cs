@@ -125,7 +125,9 @@ namespace Lionsoft.Helpers
                 }
             }
 
-            list.Add(new ResultModel() { Result = list.Select(x => x.Result).Sum() });
+            list.OrderByDescending(x => x.Result).Take(8).ToList().ForEach(x => x.IsInTopEight = true);
+
+            list.Add(new ResultModel() { Result = list.Where(x => x.IsInTopEight).Select(x => x.Result).Sum(), IsInTopEight = true });
             
             return list;
         }

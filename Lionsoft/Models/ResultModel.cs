@@ -9,5 +9,6 @@
         public string Name { get; set; }
         public string Rank { get; set; }
         public decimal Result { get; set; }
+        public bool IsInTopEight { get; set; } = false;
     }
 }
