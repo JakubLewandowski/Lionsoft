@@ -17,7 +17,7 @@
     string Concat(string text, int i) => $"{text}{i}";
     string HideRow(string text) => string.IsNullOrEmpty(text) ? "display:none;" : string.Empty;
     string SelectButtonColor(bool status) => status ? "btn btn-info" : "btn btn-secondary";
-    string IfInTopEight(bool status) => status ? "" : "background-color:#8f8f8f";
+    string IfInTopEight(bool status) => status ? "" : "rejected";
 }
 
 <div class="text-center">
@@ -73,7 +73,7 @@
                         <tbody>
                         @foreach (var result in player.Results)
                         {
-                                <tr style="@IfInTopEight(result.IsInTopEight)">
+                                <tr class="@IfInTopEight(result.IsInTopEight)">
                                 <td>@result.CardinalNumber</td>
                                 <td>@result.Date</td>
                                 <td>@result.Type</td>

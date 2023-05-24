@@ -24,3 +24,7 @@ a.btn {
 h1 {
     margin: 10px 0 10px 0;
 }
+
+.rejected {
+    color: #ccc;
+}
