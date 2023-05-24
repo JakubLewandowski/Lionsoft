@@ -10,6 +10,7 @@
     var rezonEvents = rezonSiteParserHelper.GetEvents("rezon");
     var elevenPointEvents = rezonSiteParserHelper.GetEvents("11punkt");
     var ignasiakEvents = rezonSiteParserHelper.GetEvents("ignasiak");
+    var stacjaSquashEvents = rezonSiteParserHelper.GetEvents("stacjasquash");
     var playerSiteParserHelper = new PlayerSiteParserHelper();
     var playerList = playerSiteParserHelper.GetPlayersData();
     var i = 0;
@@ -159,5 +160,27 @@
                 </div>
                 i++;
             }
-    </div>
+        </div>
+        <h1 class="display-4">Wydarzenia w Stacji Squash</h1>
+        <div class="accordion" id="accordionEvents2">
+            @await foreach (var singleEvent in stacjaSquashEvents)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="@Concat("heading", i)">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="@Concat("#collapse", i)" aria-expanded="false" aria-controls="@Concat("collapse", i)">
+                            @singleEvent.Name
+                        </button>
+                    </h2>
+                    <div id="@Concat("collapse", i)" class="accordion-collapse collapse" aria-labelledby="@Concat("heading", i)" data-bs-parent="#accordionEvents2">
+                        <div class="accordion-body">
+                            @foreach (var link in singleEvent.Links)
+                            {
+                                <a href="@link.Link" target="_blank" class="btn btn-info">@link.Name</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                i++;
+            }
+        </div>
 </div>
