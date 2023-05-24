@@ -102,12 +102,12 @@ namespace Lionsoft.Helpers
                     string pattern = @"^([\w\-]+)";
                     var regex = new Regex(pattern);
                     Match matchedCategory = regex.Match(data);
-                    resultModel.Category = matchedCategory.Value;
-                    resultModel.Name = data.Remove(0, resultModel.Category.Count() + 1);
+                    resultModel.Level = matchedCategory.Value;
+                    resultModel.Name = data.Remove(0, resultModel.Level.Count() + 1);
                 }
                 else if (result.OuterHtml.Contains("category"))
                 {
-                    resultModel.Type = data;
+                    resultModel.Category = data;
                 }
                 else if (result.OuterHtml.Contains("rank"))
                 {
