@@ -7,7 +7,7 @@ namespace Lionsoft.Helpers
     {
         public async IAsyncEnumerable<EventModel> GetEvents(string clubName)
         {
-            var url = $"https://bo5.pl/{clubName}/calendar";
+            var url = $"https://bo5.in/{clubName}/calendar";
             var httpClientHelper = new HttpClientHelper();
             var htmlDocument = await httpClientHelper.Get(url);
 
