@@ -103,7 +103,7 @@ namespace Lionsoft.Helpers
                     var regex = new Regex(pattern);
                     Match matchedCategory = regex.Match(data);
                     resultModel.Level = matchedCategory.Value;
-                    resultModel.Name = data.Remove(0, resultModel.Level.Count() + 1);
+                    resultModel.Name = data.Remove(0, resultModel.Level.Length + 1);
                 }
                 else if (result.OuterHtml.Contains("category"))
                 {
