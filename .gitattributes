@@ -1,0 +1,2 @@
+# Skrypty uruchamiane na serwerze (Linux) – zawsze z końcami linii LF, także po checkoutcie na Windows.
+*.sh text eol=lf

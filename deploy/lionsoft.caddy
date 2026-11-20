@@ -1,0 +1,26 @@
+# Blok domeny lionsoft.pl dla Caddy z projektu Offroadly (ten sam serwer, porty 80/443).
+# Na serwerze: /opt/offroadly/deploy/sites/lionsoft.caddy – Caddyfile Offroadly importuje sites/*.caddy.
+# Certyfikat: Cloudflare Origin dla tej domeny w /opt/offroadly/deploy/certs/ (tryb SSL „Full (strict)”).
+
+lionsoft.pl, www.lionsoft.pl {
+	tls /certs/lionsoft.pem /certs/lionsoft-key.pem
+
+	@www host www.lionsoft.pl
+	redir @www https://lionsoft.pl{uri} permanent
+
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:8082
+
+	log {
+		output stdout
+		format console
+	}
+}

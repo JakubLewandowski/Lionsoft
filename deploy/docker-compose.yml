@@ -1,0 +1,19 @@
+# Lionsoft – produkcja na mikr.us, na tym samym serwerze co offroadly.pl i afiszownia.
+# Ruch: Cloudflare → Caddy z projektu Offroadly (porty 80/443, plik sites/lionsoft.caddy) → 127.0.0.1:8082.
+# Na serwerze: /opt/lionsoft/deploy/ (ten plik, deploy.sh, .env). Szczegóły: DEPLOY.md.
+# Wdrożenia robi GitHub Actions przez deploy.sh – ręcznie: docker compose up -d
+
+name: lionsoft
+
+services:
+  web:
+    image: ${APP_IMAGE:-ghcr.io/jakublewandowski/lionsoft:latest}
+    restart: unless-stopped
+    # Tylko lokalnie – z internetu ruch wchodzi wyłącznie przez Caddy.
+    ports:
+      - "127.0.0.1:8082:8080"
+    # Serwer współdzielony (2 GB RAM, bez swapu) – statyczny nginx potrzebuje kilku MB.
+    mem_limit: 64m
+    logging:
+      driver: json-file
+      options: { max-size: "5m", max-file: "3" }
